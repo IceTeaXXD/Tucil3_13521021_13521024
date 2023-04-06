@@ -3,7 +3,7 @@ import networkx as nx
 from PyQt5.QtWidgets import QApplication, QMainWindow, QSizePolicy, QVBoxLayout, QWidget, QDesktopWidget
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
+from Graph import*
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -39,12 +39,18 @@ class MainWindow(QMainWindow):
 
         # Add nodes and edges to the NetworkX graph
         G = nx.DiGraph()
-        G.add_edge(1,3, weight=1)
-        G.add_edge(2,3, weight=1)
-        G.add_edge(3,6, weight=1)
-        G.add_edge(4,3, weight=1)
-        G.add_edge(5,3, weight=1)
-        G.add_node(6)
+        # G.add_edge(1,3, weight=1)
+        # G.add_edge(2,3, weight=1)
+        # G.add_edge(3,6, weight=1)
+        # G.add_edge(4,3, weight=1)
+        # G.add_edge(5,3, weight=1)
+        graph = Graph()
+        graph.createGraph("test/map2.txt")
+        # insert edges to G
+        graph.printGraph()
+        for node in graph.nodes:
+            for neighbor in graph.nodes[node]:
+                G.add_edge(node, neighbor[0], weight=neighbor[1])
 
         # Draw the NetworkX graph on the Matplotlib figure
         pos = nx.circular_layout(G)
