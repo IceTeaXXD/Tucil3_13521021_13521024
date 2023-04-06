@@ -13,14 +13,15 @@ class Graph:
         for line in file:
             line = line.split()
             for j in range(0, len(line)):
-                neighborValue = j+1
-                weight = float(line[j])
-                node = Node(i)
-                node.addNeighbor(neighborValue, weight)
-                if i not in self.nodes:
-                    self.addNode(node)
-                else:
-                    self.nodes[i].append((neighborValue, weight))
+                if line[j] != '0':
+                    neighborValue = j+1
+                    weight = float(line[j])
+                    node = Node(i)
+                    node.addNeighbor(neighborValue, weight)
+                    if i not in self.nodes:
+                        self.addNode(node)
+                    else:
+                        self.nodes[i].append((neighborValue, weight))
             i += 1
 
     def printGraph(self):
