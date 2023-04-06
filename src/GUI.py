@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Set up the main window
-        self.setWindowTitle("PyQt5 with NetworkX")
+        self.setWindowTitle("Bewe <3 Nadil")
         self.setGeometry(0, 0, 1280, 720) # set initial position and size of the window
 
         # Center the window on the screen
@@ -40,11 +40,6 @@ class MainWindow(QMainWindow):
 
         # Add nodes and edges to the NetworkX graph
         G = nx.DiGraph()
-        # G.add_edge(1,3, weight=1)
-        # G.add_edge(2,3, weight=1)
-        # G.add_edge(3,6, weight=1)
-        # G.add_edge(4,3, weight=1)
-        # G.add_edge(5,3, weight=1)
         graph = Graph()
         graph.createGraph("test/map2.txt")
         # insert edges to G
