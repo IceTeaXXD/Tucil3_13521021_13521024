@@ -76,8 +76,17 @@ class AStar:
                             if adj_node.g > node.g + n[1]:
                                 self.update_node(adj_node, node)
                 else:
-                    print(adj_node.value)
-                    print(node.value)
                     self.update_node(adj_node, node)
                     self.open.append(adj_node)
         return None
+
+    def print_total_cost(self, path, graph):
+        total_cost = 0
+        for i in range(len(path) - 1):
+            node1 = path[i]
+            node2 = path[i+1]
+            for neighbor in graph[node1]:
+                if neighbor[0] == node2:
+                    total_cost += neighbor[1]
+                    break
+        print("Total cost:", total_cost)
