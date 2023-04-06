@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QSizePolicy, QVBoxLayout,
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from Graph import*
+from UCS import*
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -51,14 +52,19 @@ class MainWindow(QMainWindow):
         for node in graph.nodes:
             for neighbor in graph.nodes[node]:
                 G.add_edge(node, neighbor[0], weight=neighbor[1])
-
+        start = 1
+        goal = 8
+        ucspath = list_to_adjacent_pairs(resultToArray(ucs(graph, start, goal)))
+        print(ucspath)
         # Draw the NetworkX graph on the Matplotlib figure
         pos = nx.circular_layout(G)
+        # color blue for 1->3;  2->3
+        edge_colors = ['red' if (u,v) in ucspath else 'black' for u,v in G.edges()]
         nx.draw_networkx_nodes(G, pos)
-        nx.draw_networkx_edges(G, pos, width=3)
         nx.draw_networkx_labels(G, pos)
-        nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='red', alpha=0.7, node_size=2000, ax=self.graph)
+        nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='red', alpha=0.7, node_size=2000, ax=self.graph, edge_color=edge_colors, width=[1 if c=='black' else 4 for c in edge_colors])
 
+        
         # Show the window
         self.show()
 

@@ -1,5 +1,14 @@
 from Graph import*
 
+def list_to_adjacent_pairs(lst):
+    return [(lst[i], lst[i+1]) for i in range(len(lst)-1)]
+
+def resultToArray(res):
+    arr = []
+    for i in range(len(res)):
+        arr.append(res[i][1])
+    return arr
+
 def printList(arr):
     if arr is None:
         print("No path found")
