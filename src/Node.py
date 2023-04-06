@@ -1,15 +1,7 @@
 class Node:
-    def __init__(self, value):
+    def __init__(self,value):
         self.value = value
-        self.edges = {}
-        # key : value neighbor
-        # value : weight nya
-        
-    def addEdge(self, node, weight):
-        self.edges[node] = weight
+        self.neighbors = []    
     
-    def getEdges(self):
-        return self.edges
-    
-    def getValue(self):
-        return self.value    
+    def addNeighbor(self,neighborValue,weight):
+        self.neighbors.append((neighborValue,weight))
