@@ -4,10 +4,10 @@ from UCS import*
 from Utils import*
 
 G = Graph()
-G.createGraph("test/map4.txt")
+G.createGraph("test/map2.txt")
 G.printGraph()
 start = 1
-goal = 14
+goal = 3
 
 
 # UCS
@@ -19,7 +19,5 @@ print("Total Cost: ", ucs.cost)
 # ASTAR
 print("\nA STAR")
 astar = AStar(start, goal, G.nodes)
-astar.search()
-print("Path: ", end="")
-print(astar.path)
-astar.print_total_cost(astar.path, G.nodes)
+print("Path: ", astar.path)
+print("Total Cost: ", astar.cost)

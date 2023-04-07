@@ -15,6 +15,8 @@ class AStar:
         self.closed = []
         self.path = []
         self.init_node(self.start)
+        self.path = self.search()
+        self.cost = self.get_cost(self.path, self.graph)
         
     def init_node(self, node):
         node.g = 0
@@ -75,7 +77,7 @@ class AStar:
                 self.update_node(adj_node, node)
         return None
 
-    def print_total_cost(self, path, graph):
+    def get_cost(self, path, graph):
         total_cost = 0
         for i in range(len(path) - 1):
             node1 = path[i]
@@ -83,4 +85,4 @@ class AStar:
             for neighbor in graph[node1]:
                 if neighbor == node2:
                     total_cost += graph[node1][neighbor]
-        print("Total cost:", total_cost)
+        return total_cost
