@@ -5,6 +5,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from Graph import*
 from UCS import*
+from Utils import*
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -48,11 +49,13 @@ class MainWindow(QMainWindow):
             for neighbor in graph.nodes[node]:
                 G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
         start = 1
-        goal = 8
-        ucspath = ucs(graph, start, goal)
-        ucspair = list_to_adjacent_pairs(ucs(graph, start, goal))
-        print(f'Path : {ucspath}')
-        print(f'Cost : {getCost(graph, ucspath)}')
+        goal = 14
+        ucs = UCS(graph, start, goal)
+        ucspair = list_to_adjacent_pairs(ucs.path)
+        # ucspath = ucs(graph, start, goal)
+        # ucspair = list_to_adjacent_pairs(ucs(graph, start, goal))
+        print(f'Path : {ucs.path}')
+        print(f'Cost : {ucs.cost}')
         # Draw the NetworkX graph on the Matplotlib figure
         pos = nx.circular_layout(G)
         # color blue for 1->3;  2->3

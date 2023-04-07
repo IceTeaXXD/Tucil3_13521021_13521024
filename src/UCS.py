@@ -1,54 +1,54 @@
 from Graph import*
 from queue import PriorityQueue
 
-def list_to_adjacent_pairs(lst):
-    return [(lst[i], lst[i+1]) for i in range(len(lst)-1)]
+class UCS:
+    def __init__(self, graph: Graph, startNode: int, goalNode: int) -> None:
+        self.graph = graph
+        self.startNode = startNode
+        self.goalNode = goalNode
+        self.path = self.ucs()
+        self.cost = self.getCost(self.path)
 
-def printPQ(pq: PriorityQueue):
-    for i in pq.queue:
-        print(i)
+    def getCost(self,path) -> int:
+        if path is None:
+            return -1
+        cost = 0
+        for i in range(len(path)-1):
+            cost += self.graph.nodes[path[i]][path[i+1]]
+        return cost
 
-def getCost(graph: Graph, path: list):
-    if path is None:
-        return -1
-    cost = 0
-    for i in range(len(path)-1):
-        cost += graph.nodes[path[i]][path[i+1]]
-    return cost
-
-def ucs(graph: Graph, startNode: int, goalNode: int):
-    # Variables Initialization
-    pq = PriorityQueue()
-    pq.put((0, [startNode]))
-    
-    while pq.qsize() > 0:
-        # Get the first element from the list
-        pathTemp = pq.get()[1]
-
-        # Get the last node from the path
-        lastNode = pathTemp[len(pathTemp)-1]
-
-        # Check if the last node is the goal node
-        if lastNode == goalNode:
-            return pathTemp
+    def ucs(self) -> list:
+        # Variables Initialization
+        pq = PriorityQueue()
+        pq.put((0, [self.startNode]))
         
-        # if the last node in the path is not the goal, enqueue all the neighbors of the last node
-        for neighbor in graph.nodes[lastNode]:
-            # if the neighbor is not in the path, enqueue it
-            if neighbor not in pathTemp:
-                # create a new path
-                pathNew = []
+        while pq.qsize() > 0:
+            # Get the first element from the list
+            pathTemp = pq.get()[1]
 
-                # copy the path to the new path
-                for i in range(len(pathTemp)):
-                    pathNew.append(pathTemp[i])
+            # Get the last node from the path
+            lastNode = pathTemp[len(pathTemp)-1]
 
-                # enqueue the neighbor to the new path
-                pathNew.append(neighbor)
+            # Check if the last node is the goal node
+            if lastNode == self.goalNode:
+                return pathTemp
+            
+            # if the last node in the path is not the goal, enqueue all the neighbors of the last node
+            for neighbor in self.graph.nodes[lastNode]:
+                # if the neighbor is not in the path, enqueue it
+                if neighbor not in pathTemp:
+                    # create a new path
+                    pathNew = []
 
-                # enqueue the new path to the list based on the total cost
-                total = getCost(graph, pathNew)
+                    # copy the path to the new path
+                    for i in range(len(pathTemp)):
+                        pathNew.append(pathTemp[i])
 
-                pq.put((total, pathNew))
+                    # enqueue the neighbor to the new path
+                    pathNew.append(neighbor)
 
-    return None
+                    # enqueue the new path to the list based on the total cost
+                    total = self.getCost(pathNew)
+                    pq.put((total, pathNew))
+
+        return None
