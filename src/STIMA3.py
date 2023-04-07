@@ -13,7 +13,11 @@ from PyQt5.QtWidgets import QFileDialog
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import os
-
+import sys
+import networkx as nx
+from Graph import*
+from UCS import*
+from Utils import*
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -119,16 +123,30 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        # Create a Matplotlib figure and canvas
-        self.figure = Figure(figsize=(8, 4), dpi=100)
+        # Define the size of the widget
+        widget_size = self.widget.size()
+
+        # Create a Figure object
+        self.figure = Figure(figsize=(widget_size.width(), widget_size.height()))
+
+        # Add a canvas to the widget
+        self.canvas = FigureCanvas(self.figure)
+        self.canvas.setParent(self.widget)
+        
+        # Set the fixed size for the widget
+        self.widget.setFixedSize(widget_size)
+
+        # Set the size of the Figure object
+        self.figure.set_size_inches(widget_size.width()/100, widget_size.height()/100)
+
+        # Create a Matplotlib figure and canvas, i want the figure to be the size of the widget
         self.canvas = FigureCanvas(self.figure)
         self.canvas.setParent(self.widget)
 
-        # Add a Matplotlib Axes to the figure
-        self.axes = self.figure.add_subplot(111)
-        self.axes.set_title('Example Plot')
-        self.axes.set_xlabel('X Axis')
-        self.axes.set_ylabel('Y Axis')
+        # Add a Graph figure to the matplotlib canvas
+        self.graph = self.figure.add_subplot(111)
+        self.graph.set_axis_off()
+
 
         # Create a push button to trigger the plot update
         self.plot_button = QtWidgets.QPushButton(self.frame)
@@ -177,16 +195,35 @@ class Ui_MainWindow(object):
 
     def update_plot(self):
         # Clear the previous plot
-        self.axes.clear()
+        self.graph.clear()
 
-        # Plot some data
-        x = [1, 2, 3, 4, 5]
-        y = [1, 4, 9, 16, 25]
-        self.axes.plot(x, y)
+        # Add nodes and edges to the NetworkX graph
+        G = nx.DiGraph()
+        graph = Graph()
+        graph.createGraph("test/map4.txt")
+        # insert edges to G
+        graph.printGraph()
+        for node in graph.nodes:
+            for neighbor in graph.nodes[node]:
+                G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
+        start = 1
+        goal = 14
+        ucs = UCS(graph, start, goal)
+        ucspair = list_to_adjacent_pairs(ucs.path)
+        # ucspath = ucs(graph, start, goal)
+        # ucspair = list_to_adjacent_pairs(ucs(graph, start, goal))
+        print(f'Path : {ucs.path}')
+        print(f'Cost : {ucs.cost}')
+        # Draw the NetworkX graph on the Matplotlib figure
+        pos = nx.circular_layout(G)
+        # color blue for 1->3;  2->3
+        edge_colors = ['red' if (u,v) in ucspair else 'black' for u,v in G.edges()]
+        nx.draw_networkx_nodes(G, pos)
+        nx.draw_networkx_labels(G, pos)
+        nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='red', alpha=0.7, node_size=2000, ax=self.graph, edge_color=edge_colors, width=[1 if c=='black' else 4 for c in edge_colors])
 
-        # Redraw the canvas
+        # Update the canvas
         self.canvas.draw()
-
 
 if __name__ == "__main__":
     import sys
