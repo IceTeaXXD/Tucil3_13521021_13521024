@@ -1,56 +1,41 @@
 from Graph import*
+from queue import PriorityQueue
 
 def list_to_adjacent_pairs(lst):
     return [(lst[i], lst[i+1]) for i in range(len(lst)-1)]
 
-def resultToArray(res):
-    arr = []
-    for i in range(len(res)):
-        arr.append(res[i][1])
-    return arr
+def printPQ(pq: PriorityQueue):
+    for i in pq.queue:
+        print(i)
 
-def printList(arr):
-    if arr is None:
-        print("No path found")
-        return
-    for i in range(len(arr)):
-        print(arr[i][1], end=" ")
-    print()
-
-def getCost(arr):
-    if arr is None:
+def getCost(graph: Graph, path: list):
+    if path is None:
         return -1
     cost = 0
-    for i in range(len(arr)):
-        cost += arr[i][0]
+    for i in range(len(path)-1):
+        cost += graph.nodes[path[i]][path[i+1]]
     return cost
 
-def notElmt(val, arr):
-    for i in range(len(arr)):
-        if arr[i][1] == val:
-            return False
-    return True
-
-def ucs(graph, startNode, goalNode):
+def ucs(graph: Graph, startNode: int, goalNode: int):
     # Variables Initialization
-    arr = [] # list of priority queues
-    temp = [(0,startNode)]
-    arr.append(temp)
-    while len(arr) > 0:
-        # Pop the first element from the list
-        pathTemp =  arr.pop(0)
+    pq = PriorityQueue()
+    pq.put((0, [startNode]))
+    
+    while pq.qsize() > 0:
+        # Get the first element from the list
+        pathTemp = pq.get()[1]
 
         # Get the last node from the path
         lastNode = pathTemp[len(pathTemp)-1]
 
-        # Check if the last node is the goal node, if yes return the path
-        if lastNode[1] == goalNode:
+        # Check if the last node is the goal node
+        if lastNode == goalNode:
             return pathTemp
-
+        
         # if the last node in the path is not the goal, enqueue all the neighbors of the last node
-        for neighbor in graph.nodes[lastNode[1]]:
+        for neighbor in graph.nodes[lastNode]:
             # if the neighbor is not in the path, enqueue it
-            if notElmt(neighbor[0], pathTemp):
+            if neighbor not in pathTemp:
                 # create a new path
                 pathNew = []
 
@@ -59,19 +44,11 @@ def ucs(graph, startNode, goalNode):
                     pathNew.append(pathTemp[i])
 
                 # enqueue the neighbor to the new path
-                pathNew.append((neighbor[1], neighbor[0]))
+                pathNew.append(neighbor)
 
                 # enqueue the new path to the list based on the total cost
-                total = getCost(pathNew)
+                total = getCost(graph, pathNew)
 
-                if len(arr) == 0:
-                    arr.append(pathNew)
-                else:
-                    for i in range(len(arr)):
-                        if total < getCost(arr[i]):
-                            arr.insert(i, pathNew)
-                            break
-                        elif i == len(arr)-1:
-                            arr.append(pathNew)
-                            break
+                pq.put((total, pathNew))
+
     return None
