@@ -184,7 +184,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Shortest Path Solver"))
         self.pushButton.setText(_translate("MainWindow", "Upload"))
         self.label_2.setText(_translate("MainWindow", "Choose File"))
         self.label_3.setText(_translate("MainWindow", "Filename:"))
@@ -192,6 +192,7 @@ class Ui_MainWindow(object):
         self.radioButton_2.setText(_translate("MainWindow", "A-Star"))
         self.pushButton_2.setText(_translate("MainWindow", "Search"))
         self.label.setText(_translate("MainWindow", "Shortest Path Solver"))
+        self.plot_button.setText(_translate("MainWindow", "Search"))
 
     def update_plot(self):
         # Clear the previous plot
