@@ -1,7 +1,7 @@
 class Node:
     def __init__(self,value):
         self.value = value
-        self.neighbors = []    
+        self.neighbors = {}    
     
     def addNeighbor(self,neighborValue,weight):
-        self.neighbors.append((neighborValue,weight))
+        self.neighbors[neighborValue] = weight

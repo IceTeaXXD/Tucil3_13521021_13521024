@@ -11,7 +11,7 @@ class AStar:
         self.start = Node(start)
         self.goal = Node(goal)
         self.graph = graph
-        self.open = []
+        self.open = [self.start]
         self.closed = []
         self.path = []
         self.init_node(self.start)
@@ -23,12 +23,12 @@ class AStar:
         node.parent = None
 
     def get_heuristic(self, node):
-        return abs(node.value - self.goal.value)
+        return 0
 
     def get_adjacent_nodes(self, node):
         nodes = []
         for n in self.graph[node.value]:
-            adj_node = Node(n[0])
+            adj_node = Node(n)
             self.init_node(adj_node)
             nodes.append(adj_node)
         return nodes
@@ -47,15 +47,12 @@ class AStar:
         self.path.reverse()
 
     def update_node(self, adj, node):
-        for n in self.graph[node.value]:
-            if n[0] == adj.value:
-                adj.g = node.g + n[1]
+        adj.g = node.g + self.graph[node.value][adj.value]
         adj.h = self.get_heuristic(adj)
         adj.f = adj.g + adj.h
         adj.parent = node
 
     def search(self):
-        self.open.append(self.start)
         while len(self.open) > 0:
             node = self.get_lowest_f()
             self.open.remove(node)
@@ -68,16 +65,14 @@ class AStar:
                 return self.path
             adj_nodes = self.get_adjacent_nodes(node)
             for adj_node in adj_nodes:
-                if adj_node in self.closed:
+                if adj_node.value in [n.value for n in self.closed]:
                     continue
-                if adj_node in self.open:
-                    for n in self.graph[node.value]:
-                        if n[0] == adj_node.value:
-                            if adj_node.g > node.g + n[1]:
-                                self.update_node(adj_node, node)
-                else:
-                    self.update_node(adj_node, node)
-                    self.open.append(adj_node)
+                if adj_node.value in [n.value for n in self.open]:
+                    if adj_node.g > node.g + self.graph[node.value][adj_node.value]:
+                        self.update_node(adj_node, node)
+                        continue
+                self.open.append(adj_node)
+                self.update_node(adj_node, node)
         return None
 
     def print_total_cost(self, path, graph):
@@ -86,7 +81,6 @@ class AStar:
             node1 = path[i]
             node2 = path[i+1]
             for neighbor in graph[node1]:
-                if neighbor[0] == node2:
-                    total_cost += neighbor[1]
-                    break
+                if neighbor == node2:
+                    total_cost += graph[node1][neighbor]
         print("Total cost:", total_cost)

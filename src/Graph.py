@@ -21,7 +21,7 @@ class Graph:
                     if i not in self.nodes:
                         self.addNode(node)
                     else:
-                        self.nodes[i].append((neighborValue, weight))
+                        self.nodes[i][neighborValue] = weight
             i += 1
 
     def printGraph(self):
