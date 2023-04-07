@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 
 
 class Ui_MainWindow(object):
@@ -27,6 +28,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName("frame")
         self.pushButton = QtWidgets.QPushButton(self.frame)
         self.pushButton.setGeometry(QtCore.QRect(40, 130, 91, 31))
+        self.pushButton.clicked.connect(self.open_file)
         font = QtGui.QFont()
         font.setFamily("Noto Sans Mono")
         font.setPointSize(11)
@@ -114,6 +116,13 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def open_file(self):
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(None, "Open File", "", "Text Files (*.txt);;All Files (*.*)")
+        if file_path:
+            # Do something with the selected file, e.g. display its path in a label
+            print("Selected file:", file_path)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

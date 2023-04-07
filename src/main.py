@@ -3,7 +3,7 @@ from AStar import*
 from UCS import*
 
 G = Graph()
-G.createGraph("test/map4.txt")
+G.createGraph("test/map2.txt")
 G.printGraph()
 start = 1
 goal = 8
