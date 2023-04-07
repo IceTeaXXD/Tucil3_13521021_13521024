@@ -1,3 +1,5 @@
+from Graph import*
+
 class Node:
     def __init__(self, value):
         self.value = value
@@ -7,7 +9,7 @@ class Node:
         self.parent = None
 
 class AStar:
-    def __init__(self, start, goal, graph):
+    def __init__(self, start, goal):
         self.start = Node(start)
         self.goal = Node(goal)
         self.graph = graph

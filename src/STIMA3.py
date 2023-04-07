@@ -9,6 +9,10 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import os
 
 
 class Ui_MainWindow(object):
@@ -35,6 +39,7 @@ class Ui_MainWindow(object):
         self.pushButton.setFont(font)
         self.pushButton.setStyleSheet("color: rgb(255, 255, 255)")
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.clicked.connect(self.open_file)
         self.label_2 = QtWidgets.QLabel(self.frame)
         self.label_2.setGeometry(QtCore.QRect(40, 100, 151, 21))
         font = QtGui.QFont()
@@ -114,8 +119,50 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        # Create a Matplotlib figure and canvas
+        self.figure = Figure(figsize=(8, 4), dpi=100)
+        self.canvas = FigureCanvas(self.figure)
+        self.canvas.setParent(self.widget)
+
+        # Add a Matplotlib Axes to the figure
+        self.axes = self.figure.add_subplot(111)
+        self.axes.set_title('Example Plot')
+        self.axes.set_xlabel('X Axis')
+        self.axes.set_ylabel('Y Axis')
+
+        # Create a push button to trigger the plot update
+        self.plot_button = QtWidgets.QPushButton(self.frame)
+        self.plot_button.setGeometry(QtCore.QRect(40, 400, 151, 31))
+        font = QtGui.QFont()
+        font.setFamily("Poppins Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setWeight(50)
+        self.plot_button.setFont(font)
+        self.plot_button.setStyleSheet("color: rgb(255, 255, 255)")
+        self.plot_button.setObjectName("plot_button")
+        self.plot_button.clicked.connect(self.update_plot)
+
+        MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def open_file(self):
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(None, "Open File", "", "Text Files (*.txt);;All Files (*.*)")
+        if file_path:
+            # Do something with the selected file, e.g. display its path in a label
+            print("Selected file:", file_path)
+            self.update_label(os.path.basename(file_path))
+
+    def update_label(self, filename=None):
+        if filename:
+            self.label_3.setText(f"Filename: {filename}")
+        else:
+            self.label_3.setText("Filename")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -127,6 +174,18 @@ class Ui_MainWindow(object):
         self.radioButton_2.setText(_translate("MainWindow", "A-Star"))
         self.pushButton_2.setText(_translate("MainWindow", "Search"))
         self.label.setText(_translate("MainWindow", "Shortest Path Solver"))
+
+    def update_plot(self):
+        # Clear the previous plot
+        self.axes.clear()
+
+        # Plot some data
+        x = [1, 2, 3, 4, 5]
+        y = [1, 4, 9, 16, 25]
+        self.axes.plot(x, y)
+
+        # Redraw the canvas
+        self.canvas.draw()
 
 
 if __name__ == "__main__":
