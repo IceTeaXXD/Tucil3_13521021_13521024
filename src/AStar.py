@@ -9,7 +9,7 @@ class Node:
         self.parent = None
 
 class AStar:
-    def __init__(self, start, goal):
+    def __init__(self, start, goal, graph):
         self.start = Node(start)
         self.goal = Node(goal)
         self.graph = graph
@@ -43,12 +43,6 @@ class AStar:
             if lowest is None or node.f < lowest.f:
                 lowest = node
         return lowest
-
-    def get_path(self):
-        while node is not None:
-            self.path.append(node.value)
-            node = node.parent
-        self.path.reverse()
 
     def update_node(self, adj, node):
         adj.g = node.g + self.graph[node.value][adj.value]

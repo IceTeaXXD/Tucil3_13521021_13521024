@@ -20,6 +20,9 @@ from UCS import*
 from Utils import*
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.file_name = None
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
@@ -129,9 +132,6 @@ class Ui_MainWindow(object):
         # Create a Figure object
         self.figure = Figure(figsize=(widget_size.width(), widget_size.height()))
 
-        # Add a canvas to the widget
-        self.canvas = FigureCanvas(self.figure)
-        self.canvas.setParent(self.widget)
         
         # Set the fixed size for the widget
         self.widget.setFixedSize(widget_size)
@@ -170,11 +170,8 @@ class Ui_MainWindow(object):
 
     def open_file(self):
         file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(None, "Open File", "", "Text Files (*.txt);;All Files (*.*)")
-        if file_path:
-            # Do something with the selected file, e.g. display its path in a label
-            print("Selected file:", file_path)
-            self.update_label(os.path.basename(file_path))
+        self.file_path, _ = file_dialog.getOpenFileName(None, "Open File", "", "Text Files (*.txt);;All Files (*.*)")
+        self.update_label(os.path.basename(self.file_path))
 
     def update_label(self, filename=None):
         if filename:
@@ -201,14 +198,14 @@ class Ui_MainWindow(object):
         # Add nodes and edges to the NetworkX graph
         G = nx.DiGraph()
         graph = Graph()
-        graph.createGraph("test/map4.txt")
+        graph.createGraph(self.file_path)
         # insert edges to G
         graph.printGraph()
         for node in graph.nodes:
             for neighbor in graph.nodes[node]:
                 G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
         start = 1
-        goal = 14
+        goal = 10
         ucs = UCS(graph, start, goal)
         ucspair = list_to_adjacent_pairs(ucs.path)
         # ucspath = ucs(graph, start, goal)
@@ -216,12 +213,12 @@ class Ui_MainWindow(object):
         print(f'Path : {ucs.path}')
         print(f'Cost : {ucs.cost}')
         # Draw the NetworkX graph on the Matplotlib figure
-        pos = nx.circular_layout(G)
+        pos = nx.spring_layout(G)
         # color blue for 1->3;  2->3
         edge_colors = ['red' if (u,v) in ucspair else 'black' for u,v in G.edges()]
         nx.draw_networkx_nodes(G, pos)
         nx.draw_networkx_labels(G, pos)
-        nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='red', alpha=0.7, node_size=2000, ax=self.graph, edge_color=edge_colors, width=[1 if c=='black' else 4 for c in edge_colors])
+        nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='red', alpha=0.7, node_size=1000, ax=self.graph, edge_color=edge_colors, width=[1 if c=='black' else 4 for c in edge_colors])
 
         # Update the canvas
         self.canvas.draw()
