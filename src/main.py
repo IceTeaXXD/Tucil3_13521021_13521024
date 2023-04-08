@@ -52,7 +52,7 @@ try:
 
     # give description for each node in the map
     for node in G.nodes:
-        gmap.marker(G.nodeID[node][1], G.nodeID[node][2], 'red', title=f"Node {node} - {G.nodeID[node][0]}")
+        gmap.marker(G.nodeID[node][1], G.nodeID[node][2], 'red', title=f"Node {node} - {G.nodeID[node][0]}.", info_window=f"Node {node} - {G.nodeID[node][0]}.")
 
     # plot the graph, each node is a blue dot, each edge is a blue line
     for node in G.nodes:

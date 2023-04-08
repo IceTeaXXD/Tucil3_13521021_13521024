@@ -185,8 +185,8 @@ class Ui_MainWindow(object):
 
         #initiate webview
         self.web_view = QWebEngineView(self.centralwidget)
-        self.web_view.setGeometry(QtCore.QRect(350, 0, 930, 620))
-        self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("src/maptest.html")))
+        self.web_view.setGeometry(QtCore.QRect(350, 90, 930, 530))
+        self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/gmap2.html")))
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
