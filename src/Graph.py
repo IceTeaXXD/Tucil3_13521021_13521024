@@ -8,6 +8,7 @@ class Graph:
         self.Maplong = 0
         self.Mapname = ""
         self.nodeID = {}
+        self.numNodes = 0
     def addNode(self,node):
         self.nodes[node.value] = node.neighbors
 
@@ -40,7 +41,8 @@ class Graph:
 
         # the second line is the number of nodes
         n = int(file.readline())
-
+        self.numNodes = n
+        
         # the third line is the map latitude
         self.Maplat = float(file.readline())
 
