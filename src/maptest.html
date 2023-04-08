@@ -10,12 +10,14 @@
             zoom: 16,
             center: new google.maps.LatLng(-6.892797830438268, 107.61044783387082)
         });
-
+        var value = 0;
         // Define the click event listener
         google.maps.event.addListener(map, 'click', function(event) {
             var lat = event.latLng.lat();
             var lng = event.latLng.lng();
+            value += 1;
             console.log("Clicked location:", lat, lng);
+            console.log("Value:", value);
 
             // Add a marker to the clicked location
             var marker = new google.maps.Marker({
