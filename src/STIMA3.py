@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import os
@@ -181,6 +182,12 @@ class Ui_MainWindow(object):
 "background-color: rgb(61, 56, 70);")
         self.route.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.route.setObjectName("route")
+
+        #initiate webview
+        self.web_view = QWebEngineView(self.centralwidget)
+        self.web_view.setGeometry(QtCore.QRect(350, 0, 930, 620))
+        self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("src/maptest.html")))
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
@@ -264,6 +271,9 @@ class Ui_MainWindow(object):
         self.goal_val = self.goal_input.text()
 
     def init_plot(self):
+        # Remove web view
+        self.web_view.hide()
+
         # Clear the previous plot
         self.graph.clear()
 
