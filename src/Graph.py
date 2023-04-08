@@ -13,9 +13,10 @@ class Graph:
 
     def createGraph(self,filename):
         file = open(filename, 'r')
+        file_temp = open(filename, 'r')
         i = 1
         # check if the first line is 0, if not throw error
-        if file.readline().split()[0] != '0':
+        if file_temp.readline().split()[0] != '0':
             raise Exception("Invalid File Input!")
         for line in file:
             line = line.split()
