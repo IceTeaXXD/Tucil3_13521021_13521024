@@ -8,7 +8,7 @@ G = Graph()
 G.createGraph("test/map5.txt")
 G.printGraph()
 start = 1
-goal = 6
+goal = 12
 
 # UCS
 print("\nUNIFORM COST SEARCH")
