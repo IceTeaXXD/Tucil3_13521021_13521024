@@ -1,4 +1,5 @@
 from Graph import*
+from Utils import*
 
 class Node:
     def __init__(self, value):
@@ -13,12 +14,13 @@ class AStar:
         self.start = Node(start)
         self.goal = Node(goal)
         self.graph = graph
+        self.graph_nodes = graph.nodes
         self.open = [self.start]
         self.closed = []
         self.path = []
         self.init_node(self.start)
         self.path = self.search()
-        self.cost = self.get_cost(self.path, self.graph)
+        self.cost = self.get_cost(self.path, self.graph_nodes)
         
     def init_node(self, node):
         node.g = 0
@@ -27,11 +29,14 @@ class AStar:
         node.parent = None
 
     def get_heuristic(self, node):
-        return 0
+        try :
+            return euclidean_distance((self.graph.nodeID[node.value][1], self.graph.nodeID[node.value][2]), (self.graph.nodeID[self.goal.value][1], self.graph.nodeID[self.goal.value][2]))
+        except Exception as e :
+            return 0
 
     def get_adjacent_nodes(self, node):
         nodes = []
-        for n in self.graph[node.value]:
+        for n in self.graph_nodes[node.value]:
             adj_node = Node(n)
             self.init_node(adj_node)
             nodes.append(adj_node)
@@ -45,7 +50,7 @@ class AStar:
         return lowest
 
     def update_node(self, adj, node):
-        adj.g = node.g + self.graph[node.value][adj.value]
+        adj.g = node.g + self.graph_nodes[node.value][adj.value]
         adj.h = self.get_heuristic(adj)
         adj.f = adj.g + adj.h
         adj.parent = node
@@ -66,7 +71,7 @@ class AStar:
                 if adj_node.value in [n.value for n in self.closed]:
                     continue
                 if adj_node.value in [n.value for n in self.open]:
-                    if adj_node.g > node.g + self.graph[node.value][adj_node.value]:
+                    if adj_node.g > node.g + self.graph_nodes[node.value][adj_node.value]:
                         self.update_node(adj_node, node)
                         continue
                 self.open.append(adj_node)
