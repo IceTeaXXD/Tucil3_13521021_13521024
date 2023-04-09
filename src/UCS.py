@@ -1,7 +1,9 @@
 from Graph import*
 from queue import PriorityQueue
 
+# UCS class
 class UCS:
+    # initialize UCS
     def __init__(self, graph: Graph, startNode: int, goalNode: int) -> None:
         self.graph = graph
         self.startNode = startNode
@@ -9,6 +11,7 @@ class UCS:
         self.path = self.ucs()
         self.cost = self.getCost(self.path)
 
+    # get cost of the path -> int
     def getCost(self,path) -> int:
         if path is None:
             return -1
@@ -17,19 +20,20 @@ class UCS:
             cost += self.graph.nodes[path[i]][path[i+1]]
         return cost
 
+    # Uniform Cost Search -> list of path nodes
     def ucs(self) -> list:
-        # Variables Initialization
+        # variables Initialization
         pq = PriorityQueue()
         pq.put((0, [self.startNode]))
         
         while pq.qsize() > 0:
-            # Get the first element from the list
+            # get the first element from the list
             pathTemp = pq.get()[1]
 
-            # Get the last node from the path
+            # get the last node from the path
             lastNode = pathTemp[len(pathTemp)-1]
 
-            # Check if the last node is the goal node
+            # check if the last node is the goal node
             if lastNode == self.goalNode:
                 return pathTemp
             
