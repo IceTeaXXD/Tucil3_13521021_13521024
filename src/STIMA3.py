@@ -21,6 +21,7 @@ from UCS import*
 from AStar import*
 from Utils import*
 import time
+import gmplot
 
 
 class Ui_MainWindow(object):
@@ -183,10 +184,9 @@ class Ui_MainWindow(object):
         self.route.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.route.setObjectName("route")
 
-        #initiate webview
         self.web_view = QWebEngineView(self.centralwidget)
         self.web_view.setGeometry(QtCore.QRect(350, 90, 930, 530))
-        self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/gmap2.html")))
+        
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -271,78 +271,159 @@ class Ui_MainWindow(object):
         self.goal_val = self.goal_input.text()
 
     def init_plot(self):
-        # Remove web view
-        self.web_view.hide()
 
         # Clear the previous plot
         self.graph.clear()
 
-        # Add nodes and edges to the NetworkX graph
-        G = nx.DiGraph()
-        graph = Graph()
-        graph.createGraph(self.file_path)
-        # insert edges to G
-        graph.printGraph()
-        for node in graph.nodes:
-            for neighbor in graph.nodes[node]:
-                G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
-        # Draw the NetworkX graph on the Matplotlib figure, use kamada-kawai
-        pos = nx.kamada_kawai_layout(G)
-        nx.draw(G, pos, with_labels=True, node_size=500, node_color='black', font_size=10, font_color='white', font_weight='bold', ax=self.graph)
+        try :
+            #unhide webview
+            self.web_view.show()
+            G = Graph()
+            G.createGraphWithCoords(self.file_path)
+            G.printGraph()
+            gmap = gmplot.GoogleMapPlotter(G.Maplat, G.Maplong, 17)
 
-        # Refresh the canvas
-        self.canvas.draw()
+            # give the map a title
+            gmap.title = G.Mapname
+
+            # give description for each node in the map
+            for node in G.nodes:
+                gmap.marker(G.nodeID[node][1], G.nodeID[node][2], 'red', title=f"Node {node} - {G.nodeID[node][0]}.", info_window=f"Node {node} - {G.nodeID[node][0]}.")
+
+            # plot the graph, each node is a blue dot, each edge is a blue line
+            for node in G.nodes:
+                for neighbor in G.nodes[node]:
+                    gmap.scatter([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'red', size = 5, marker = False)
+                    gmap.plot([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'blue', edge_width=1)
+
+            gmap.draw("result/"+G.Mapname+".html")
+            #initiate webview
+            self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/"+G.Mapname+".html")))
+            #hide canvas
+            self.canvas.hide()
+        except:
+            #unhide canvas
+            self.canvas.show()
+            # Add nodes and edges to the NetworkX graph
+            G = nx.DiGraph()
+            graph = Graph()
+            graph.createGraph(self.file_path)
+            # insert edges to G
+            graph.printGraph()
+            for node in graph.nodes:
+                for neighbor in graph.nodes[node]:
+                    G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
+            # Draw the NetworkX graph on the Matplotlib figure, use kamada-kawai
+            pos = nx.kamada_kawai_layout(G)
+            nx.draw(G, pos, with_labels=True, node_size=500, node_color='black', font_size=10, font_color='white', font_weight='bold', ax=self.graph)
+
+            #hide webview
+            self.web_view.hide()
+            # Refresh the canvas
+            self.canvas.draw()
+
 
     def update_plot(self):
         pair = None
         startTime = None
         endTime = None
+        start = int(self.start_val)
+        goal = int(self.goal_val)
         # Clear the previous plot
         self.graph.clear()
 
-        # Add nodes and edges to the NetworkX graph
-        G = nx.DiGraph()
-        graph = Graph()
-        graph.createGraph(self.file_path)
-        # insert edges to G
-        graph.printGraph()
-        for node in graph.nodes:
-            for neighbor in graph.nodes[node]:
-                G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
-        # Draw the NetworkX graph on the Matplotlib figure, use kamada-kawai
-        pos = nx.kamada_kawai_layout(G)
-        nx.draw(G, pos, with_labels=True, node_size=500, node_color='black', font_size=10, font_color='white', font_weight='bold', ax=self.graph)
+        try :
+            G = Graph()
+            G.createGraphWithCoords(self.file_path)
+            G.printGraph()
+            
 
-        # Find the path using UCS
-        start = int(self.start_val)
-        goal = int(self.goal_val)
-        graph = Graph()
-        
-        graph.createGraph(self.file_path)
-        if self.UCS_button.isChecked():
-            startTime = time.perf_counter_ns()
-            ucs = UCS(graph, start, goal)
-            endTime = time.perf_counter_ns()
-            pair = list_to_adjacent_pairs(ucs.path)
-            self.route_path = ucs.path
-            self.total_cost = ucs.cost
-        elif self.AS_button.isChecked():
-            startTime = time.perf_counter_ns()
-            astar = AStar(start, goal, graph.nodes)
-            endTime = time.perf_counter_ns()
-            pair = list_to_adjacent_pairs(astar.path)
-            self.route_path = astar.path
-            self.total_cost = astar.cost
-        self.runtime = (endTime - startTime) / 1000
+            gmap = gmplot.GoogleMapPlotter(G.Maplat, G.Maplong, 17)
 
-        # Draw the NetworkX graph on the Matplotlib figure
-        pos = nx.kamada_kawai_layout(G)
+            # give the map a title
+            gmap.title = G.Mapname
 
-        # Color edges on the UCS path as red
-        nx.draw_networkx_edges(G, pos, edgelist=pair, edge_color='red', width=3, ax=self.graph)
+            # give description for each node in the map
+            for node in G.nodes:
+                gmap.marker(G.nodeID[node][1], G.nodeID[node][2], 'red', title=f"Node {node} - {G.nodeID[node][0]}.", info_window=f"Node {node} - {G.nodeID[node][0]}.")
 
-        # Update the canvas
-        self.canvas.draw()
+            # plot the graph, each node is a blue dot, each edge is a blue line
+            for node in G.nodes:
+                for neighbor in G.nodes[node]:
+                    gmap.scatter([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'red', size = 5, marker = False)
+                    gmap.plot([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'blue', edge_width=1)
+
+            if self.UCS_button.isChecked():
+                startTime = time.perf_counter_ns()
+                ucs = UCS(G, start, goal)
+                endTime = time.perf_counter_ns()
+                self.route_path = ucs.path
+                self.total_cost = ucs.cost
+                for i in range(len(ucs.path)-1):
+                    gmap.plot([G.nodeID[ucs.path[i]][1], G.nodeID[ucs.path[i+1]][1]], [G.nodeID[ucs.path[i]][2], G.nodeID[ucs.path[i+1]][2]], 'green', edge_width=5)
+            elif self.AS_button.isChecked():
+                startTime = time.perf_counter_ns()
+                astar = AStar(start, goal, G)
+                endTime = time.perf_counter_ns()
+                self.route_path = astar.path
+                self.total_cost = astar.cost
+                # plot the path
+                for i in range(len(astar.path)-1):
+                    gmap.plot([G.nodeID[astar.path[i]][1], G.nodeID[astar.path[i+1]][1]], [G.nodeID[astar.path[i]][2], G.nodeID[astar.path[i+1]][2]], 'green', edge_width=5)
+            self.runtime = (endTime - startTime) / 1000
+
+            gmap.draw("result/"+G.Mapname+".html")
+            #initiate webview
+            self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/"+G.Mapname+".html")))
+            #hide canvas
+            self.canvas.hide()
+
+        except :
+            #unhide canvas
+            self.canvas.show()
+            # Add nodes and edges to the NetworkX graph
+            G = nx.DiGraph()
+            graph = Graph()
+            graph.createGraph(self.file_path)
+            # insert edges to G
+            graph.printGraph()
+            for node in graph.nodes:
+                for neighbor in graph.nodes[node]:
+                    G.add_edge(node, neighbor, weight=graph.nodes[node][neighbor])
+            # Draw the NetworkX graph on the Matplotlib figure, use kamada-kawai
+            pos = nx.kamada_kawai_layout(G)
+            nx.draw(G, pos, with_labels=True, node_size=500, node_color='black', font_size=10, font_color='white', font_weight='bold', ax=self.graph)
+
+            graph = Graph()
+            
+            graph.createGraph(self.file_path)
+            if self.UCS_button.isChecked():
+                startTime = time.perf_counter_ns()
+                ucs = UCS(graph, start, goal)
+                endTime = time.perf_counter_ns()
+                pair = list_to_adjacent_pairs(ucs.path)
+                self.route_path = ucs.path
+                self.total_cost = ucs.cost
+            elif self.AS_button.isChecked():
+                startTime = time.perf_counter_ns()
+                astar = AStar(start, goal, graph)
+                endTime = time.perf_counter_ns()
+                pair = list_to_adjacent_pairs(astar.path)
+                self.route_path = astar.path
+                self.total_cost = astar.cost
+            self.runtime = (endTime - startTime) / 1000
+
+            # Draw the NetworkX graph on the Matplotlib figure
+            pos = nx.kamada_kawai_layout(G)
+
+            # Color edges on the UCS path as red
+            nx.draw_networkx_edges(G, pos, edgelist=pair, edge_color='red', width=3, ax=self.graph)
+
+            # Update the canvas
+            self.canvas.draw()
+
+            #hide webview
+            self.web_view.hide()
         
         # Update
         self.update_run_time()

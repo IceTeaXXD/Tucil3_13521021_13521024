@@ -60,9 +60,9 @@ for node in G.nodes:
         gmap.scatter([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'red', size = 5, marker = False)
         gmap.plot([G.nodeID[node][1], G.nodeID[neighbor][1]], [G.nodeID[node][2], G.nodeID[neighbor][2]], 'blue', edge_width=1)
 
-# plot the path
-for i in range(len(astar.path)-1):
-    gmap.plot([G.nodeID[astar.path[i]][1], G.nodeID[astar.path[i+1]][1]], [G.nodeID[astar.path[i]][2], G.nodeID[astar.path[i+1]][2]], 'green', edge_width=2)
+# # plot the path
+# for i in range(len(astar.path)-1):
+#     gmap.plot([G.nodeID[astar.path[i]][1], G.nodeID[astar.path[i+1]][1]], [G.nodeID[astar.path[i]][2], G.nodeID[astar.path[i+1]][2]], 'green', edge_width=2)
 
 
 gmap.draw("result/gmap2.html")
