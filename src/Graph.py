@@ -9,6 +9,7 @@ class Graph:
         self.Maplat = 0
         self.Maplong = 0
         self.Mapname = ""
+        self.Mapzoom = 0
         self.nodeID = {}
         self.numNodes = 0
 
@@ -57,6 +58,9 @@ class Graph:
 
         # the fourth line is the map longitude
         self.Maplong = float(file.readline())
+
+        # map zoom
+        self.Mapzoom = float(file.readline())
 
         # the next n lines are the adjacency matrix
         for i in range(n):

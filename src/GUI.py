@@ -302,7 +302,7 @@ class Ui_MainWindow(object):
             try :
                 # create graph with coordinates
                 graph.createGraphWithCoords(self.file_path)
-                gmap = gmplot.GoogleMapPlotter(graph.Maplat, graph.Maplong, 17.5)
+                gmap = gmplot.GoogleMapPlotter(graph.Maplat, graph.Maplong, graph.Mapzoom)
                 gmap.title = graph.Mapname
 
                 # give description for each node in the map
@@ -392,7 +392,7 @@ class Ui_MainWindow(object):
             try :
                 # create graph with coordinates
                 graph.createGraphWithCoords(self.file_path)
-                gmap = gmplot.GoogleMapPlotter(graph.Maplat, graph.Maplong, 17.5)
+                gmap = gmplot.GoogleMapPlotter(graph.Maplat, graph.Maplong, graph.Mapzoom)
                 gmap.title = graph.Mapname
 
                 # give description for each node in the map
@@ -417,6 +417,10 @@ class Ui_MainWindow(object):
                     for i in range(len(ucs.path)-1):
                         gmap.plot([graph.nodeID[ucs.path[i]][1], graph.nodeID[ucs.path[i+1]][1]], [graph.nodeID[ucs.path[i]][2], graph.nodeID[ucs.path[i+1]][2]], 'green', edge_width=5)
 
+                    # give the start and goal node a different color
+                    gmap.marker(graph.nodeID[start][1], graph.nodeID[start][2], 'yellow', title=f"Start Node {start} - {graph.nodeID[start][0]}.", info_window=f"Start Node {start} - {graph.nodeID[start][0]}.")
+                    gmap.marker(graph.nodeID[goal][1], graph.nodeID[goal][2], 'green', title=f"Goal Node {goal} - {graph.nodeID[goal][0]}.", info_window=f"Goal Node {goal} - {graph.nodeID[goal][0]}.")
+
                 # if A* is selected
                 elif self.AS_button.isChecked():
                     startTime = time.perf_counter_ns()
@@ -428,6 +432,10 @@ class Ui_MainWindow(object):
                     # plot the path
                     for i in range(len(astar.path)-1):
                         gmap.plot([graph.nodeID[astar.path[i]][1], graph.nodeID[astar.path[i+1]][1]], [graph.nodeID[astar.path[i]][2], graph.nodeID[astar.path[i+1]][2]], 'green', edge_width=5)
+
+                    # give the start and goal node a different color
+                    gmap.marker(graph.nodeID[start][1], graph.nodeID[start][2], 'yellow', title=f"Start Node {start} - {graph.nodeID[start][0]}.", info_window=f"Start Node {start} - {graph.nodeID[start][0]}.")
+                    gmap.marker(graph.nodeID[goal][1], graph.nodeID[goal][2], 'green', title=f"Goal Node {goal} - {graph.nodeID[goal][0]}.", info_window=f"Goal Node {goal} - {graph.nodeID[goal][0]}.")
 
                 self.runtime = (endTime - startTime) / 1000
 
