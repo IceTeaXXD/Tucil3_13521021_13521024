@@ -20,15 +20,20 @@ class Graph:
     # create graph from file
     def createGraph(self,filename):
         file = open(filename, 'r')
-        file_temp = open(filename, 'r')
+        file_temp1 = open(filename, 'r')
+        file_temp2 = open(filename, 'r')
         i = 1
 
+        # check if the first line is 0, if not throw error
+        if file_temp1.readline().split()[0] != '0':
+            raise Exception("Invalid File Input!")
+        
         # check if the matrix is square
-        lines = file_temp.readlines()
+        lines = file_temp2.readlines()
         for line in lines:
             if len(line.split()) != len(lines):
-                raise ValueError("The matrix is not square")
-
+                raise Exception("The matrix is not square")
+            
         # read file from txt
         for line in file:
             line = line.split()
