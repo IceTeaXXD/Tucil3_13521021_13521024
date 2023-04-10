@@ -22,10 +22,13 @@ class Graph:
         file_temp = open(filename, 'r')
         i = 1
 
-        # check if the first line is 0, if not throw error
-        if file_temp.readline().split()[0] != '0':
-            raise Exception("Invalid File Input!")
-        
+        # check if the matrix is square
+        lines = file_temp.readlines()
+        for line in lines:
+            if len(line.split()) != len(lines):
+                raise ValueError("The matrix is not square")
+
+        # read file from txt
         for line in file:
             line = line.split()
             for j in range(0, len(line)):
