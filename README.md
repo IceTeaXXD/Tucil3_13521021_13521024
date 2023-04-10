@@ -5,6 +5,8 @@
 * [General Information](#general-information)
 * [Technology Used](#technology-used)
 * [Project Structure](#project-structure)
+* [Local Setup](#local-setup)
+* [File Input Structure](#file-input-structure)
 ## Contributors
 | NIM | Nama |
 | :---: | :---: |
