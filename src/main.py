@@ -316,7 +316,7 @@ class Ui_MainWindow(object):
                         gmap.plot([graph.nodeID[node][1], graph.nodeID[neighbor][1]], [graph.nodeID[node][2], graph.nodeID[neighbor][2]], 'blue', edge_width=1)
 
                 # save the map to html file
-                gmap.draw("result/"+graph.Mapname+".html")
+                gmap.draw("bin/result.html")
 
                 #unhide webview
                 self.web_view.show()
@@ -324,7 +324,7 @@ class Ui_MainWindow(object):
                 self.canvas.hide()
 
                 # refresh the webview
-                self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/"+graph.Mapname+".html")))
+                self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("bin/result.html")))
 
             # if file input is adjacency matrix
             except:
@@ -440,7 +440,7 @@ class Ui_MainWindow(object):
                 self.runtime = (endTime - startTime) / 1000
 
                 # save the map to html file
-                gmap.draw("result/"+graph.Mapname+".html")
+                gmap.draw("bin/result.html")
 
                 #unhide webview
                 self.web_view.show()
@@ -448,7 +448,7 @@ class Ui_MainWindow(object):
                 self.canvas.hide()
 
                 # refresh the webview
-                self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("result/"+graph.Mapname+".html")))
+                self.web_view.setUrl(QtCore.QUrl.fromLocalFile(os.path.abspath("bin/result.html")))
 
                 # update labels
                 self.update_run_time()
