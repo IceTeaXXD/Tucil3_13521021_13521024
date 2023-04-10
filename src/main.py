@@ -20,7 +20,7 @@ class Ui_MainWindow(object):
         self.file_path = None
         self.start_val = None
         self.goal_val = None
-        self.total_cost = None
+        self.total_cost = ""
         self.route_path = None
         self.runtime = 0
 
@@ -411,7 +411,7 @@ class Ui_MainWindow(object):
                     ucs = UCS(graph, start, goal)
                     endTime = time.perf_counter_ns()
                     self.route_path = ucs.path
-                    self.total_cost = ucs.cost
+                    self.total_cost = "{:.4f} km".format(round(ucs.cost * 0.001, 4))
 
                     # plot the path
                     for i in range(len(ucs.path)-1):
@@ -427,7 +427,7 @@ class Ui_MainWindow(object):
                     astar = AStar(graph, start, goal)
                     endTime = time.perf_counter_ns()
                     self.route_path = astar.path
-                    self.total_cost = astar.cost
+                    self.total_cost = "{:.4f} km".format(round(astar.cost * 0.001, 4))
 
                     # plot the path
                     for i in range(len(astar.path)-1):
