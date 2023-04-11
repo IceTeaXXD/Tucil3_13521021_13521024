@@ -18,6 +18,7 @@ The shortest path problem is a one of the most popular problem in computation. I
 - Python
 - Matplotlib Python Library
 - NetworkX Python Library
+- GMPlot Python Library
 - PyQt Python Library (GUI)
 ## Project Structure
 ```bash
@@ -42,13 +43,16 @@ The shortest path problem is a one of the most popular problem in computation. I
 ```
 
 ## Local Setup
+<br>
 1. Clone this repo using the command below: 
 
 ```
 git clone https://github.com/IceTeaXXD/Tucil3_13521021_13521024.git
 ```
 <br>
-2. Install the required library using this command:
+2. Install the required library using this command :
+
+(if you encounter any issues, please manually download the required library)
 
 ```
 pip install -r src/requirements.txt
@@ -66,6 +70,7 @@ python src/main.py
 4. Within the GUI, upload the test case file, you can choose the provided test case in the test directory
 
 ![](doc/file.png)
+
 <br>
 5. Input the starting and goal node value, you can see the value from the graph shown or by clicking the marker for the Google Maps visualization.
 
