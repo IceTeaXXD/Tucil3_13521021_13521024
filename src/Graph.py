@@ -23,10 +23,6 @@ class Graph:
         file_temp1 = open(filename, 'r')
         file_temp2 = open(filename, 'r')
         i = 1
-
-        # check if the first line is 0, if not throw error
-        if file_temp1.readline().split()[0] != '0':
-            raise Exception("Invalid File Input!")
         
         # check if the matrix is square
         lines = file_temp2.readlines()
