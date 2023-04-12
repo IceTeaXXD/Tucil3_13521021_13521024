@@ -58,11 +58,16 @@ git clone https://github.com/IceTeaXXD/Tucil3_13521021_13521024.git
 pip install -r src/requirements.txt
 ```
 <br>
-3. Compile the program directly in this root directory
+3. Run the program directly in this root directory
 
 ```
 python src/main.py
 ```
+Alternatively, you can use the `run.bat` if you're using Windows. You can open the runner by double clicking it directly or by calling the runner using this command below in the root directory
+```
+./run.bat
+```
+
 
 ![](doc/home.png)
 
